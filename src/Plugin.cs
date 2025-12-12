@@ -1,4 +1,6 @@
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 using SwiftlyS2.Shared;
 using SwiftlyS2.Shared.GameEventDefinitions;
 using SwiftlyS2.Shared.Players;
@@ -8,16 +10,19 @@ namespace K4DamageInfo;
 
 [PluginMetadata(
 	Id = "k4.damageinfo",
-	Version = "1.0.0",
+	Version = "1.0.1",
 	Name = "K4 - Damage Info",
 	Author = "K4ryuu",
 	Description = "Shows damage information to players."
 )]
 public sealed partial class Plugin(ISwiftlyCore core) : BasePlugin(core)
 {
-	public static new ISwiftlyCore Core { get; private set; } = null!;
+	private const string ConfigFileName = "k4-damageinfo.jsonc";
+	private const string ConfigSection = "K4DamageInfo";
 
-	private PluginConfig _config = null!;
+	public static new ISwiftlyCore Core { get; private set; } = null!;
+	public static IOptionsMonitor<PluginConfig> Config { get; private set; } = null!;
+
 	private readonly Dictionary<int, PlayerData> _playerData = [];
 
 	public override void Load(bool hotReload)
@@ -34,14 +39,20 @@ public sealed partial class Plugin(ISwiftlyCore core) : BasePlugin(core)
 
 	private void LoadConfiguration()
 	{
-		const string ConfigFileName = "config.jsonc";
-		const string ConfigSection = "K4DamageInfo";
-
 		Core.Configuration
 			.InitializeJsonWithModel<PluginConfig>(ConfigFileName, ConfigSection)
-			.Configure(cfg => cfg.AddJsonFile(Core.Configuration.GetConfigPath(ConfigFileName), optional: false, reloadOnChange: false));
+			.Configure(builder =>
+			{
+				builder.AddJsonFile(ConfigFileName, optional: false, reloadOnChange: true);
+			});
 
-		_config = Core.Configuration.Manager.GetSection(ConfigSection).Get<PluginConfig>() ?? new();
+		ServiceCollection services = new();
+		services.AddSwiftly(Core)
+			.AddOptions<PluginConfig>()
+			.BindConfiguration(ConfigFileName);
+
+		var provider = services.BuildServiceProvider();
+		Config = provider.GetRequiredService<IOptionsMonitor<PluginConfig>>();
 	}
 
 	private void RegisterEvents()

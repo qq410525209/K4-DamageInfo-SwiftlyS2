@@ -11,7 +11,7 @@ public sealed partial class Plugin
 		var localizer = Core.Translation.GetPlayerLocalizer(attacker);
 		string hitgroupName = GetHitgroupName(localizer, hitgroup);
 
-		if (_config.ConsoleDamageInfo)
+		if (Config.CurrentValue.ConsoleDamageInfo)
 		{
 			attacker.SendConsole(localizer["phrases.console.normal", victim.Controller?.PlayerName ?? "Unknown", dmgHealth, dmgArmor, hitgroupName]);
 
@@ -22,7 +22,7 @@ public sealed partial class Plugin
 			}
 		}
 
-		if (_config.CenterDamageInfo)
+		if (Config.CurrentValue.CenterDamageInfo)
 		{
 			var attackerData = GetPlayerData(attacker.Slot);
 			if (!attackerData.RecentDamages.TryGetValue(victim.Slot, out var recentDamage))
@@ -32,7 +32,7 @@ public sealed partial class Plugin
 			}
 
 			recentDamage.AddDamage(dmgHealth);
-			attacker.SendCenterHTML(localizer["phrases.center.html", hitgroupName, dmgArmor, recentDamage.TotalDamage], _config.CenterInfoTimeout * 1000);
+			attacker.SendCenterHTML(localizer["phrases.center.html", hitgroupName, dmgArmor, recentDamage.TotalDamage], Config.CurrentValue.CenterInfoTimeout * 1000);
 		}
 	}
 
@@ -47,7 +47,7 @@ public sealed partial class Plugin
 
 		var localizer = Core.Translation.GetPlayerLocalizer(player);
 
-		if (_config.ShowAllDamages)
+		if (Config.CurrentValue.ShowAllDamages)
 			DisplayAllPlayersDamage(player, localizer);
 		else
 			DisplayPlayerDamageInfo(player, data.DamageInfo, localizer);
@@ -90,7 +90,7 @@ public sealed partial class Plugin
 		foreach (var entry in info.GivenDamage)
 		{
 			int otherSlot = entry.Key;
-			if (_config.ShowOnlyKiller && data.VictimKiller != otherSlot)
+			if (Config.CurrentValue.ShowOnlyKiller && data.VictimKiller != otherSlot)
 				continue;
 
 			if (!headerPrinted)
@@ -107,7 +107,7 @@ public sealed partial class Plugin
 		foreach (var entry in info.TakenDamage)
 		{
 			int otherSlot = entry.Key;
-			if (_config.ShowOnlyKiller && data.VictimKiller != otherSlot)
+			if (Config.CurrentValue.ShowOnlyKiller && data.VictimKiller != otherSlot)
 				continue;
 
 			if (processedSlots.Contains(otherSlot))

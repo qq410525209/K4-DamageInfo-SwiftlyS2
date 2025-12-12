@@ -20,7 +20,7 @@ public sealed partial class Plugin
 	private HookResult OnPlayerDeath(EventPlayerDeath @event)
 	{
 		var gameRules = Core.EntitySystem.GetGameRules();
-		if (gameRules == null || gameRules.WarmupPeriod || !_config.AllowDeathPrint)
+		if (gameRules == null || gameRules.WarmupPeriod || !Config.CurrentValue.AllowDeathPrint)
 			return HookResult.Continue;
 
 		var victim = @event.UserIdPlayer;
@@ -35,7 +35,7 @@ public sealed partial class Plugin
 
 		DisplayDamageInfo(victim);
 
-		if (_config.NoRoundsMode)
+		if (Config.CurrentValue.NoRoundsMode)
 			data.DamageInfo.Clear();
 
 		return HookResult.Continue;
@@ -53,14 +53,14 @@ public sealed partial class Plugin
 		var victimTeam = victim.Controller?.Team ?? Team.None;
 		var attackerTeam = attacker!.Controller?.Team ?? Team.None;
 
-		if (victimTeam == attackerTeam && !_config.ShowFriendlyFire)
+		if (victimTeam == attackerTeam && !Config.CurrentValue.ShowFriendlyFire)
 			return HookResult.Continue;
 
 		int dmgHealth = @event.DmgHealth;
 		int dmgArmor = @event.DmgArmor;
 		var hitgroup = (HitGroup_t)@event.HitGroup;
 
-		if (!attacker.IsFakeClient && (victimTeam != attackerTeam || _config.FFAMode))
+		if (!attacker.IsFakeClient && (victimTeam != attackerTeam || Config.CurrentValue.FFAMode))
 			ShowLiveDamageInfo(attacker, victim, dmgHealth, dmgArmor, hitgroup);
 
 		TrackDamage(victim, attacker, dmgHealth);
@@ -76,7 +76,7 @@ public sealed partial class Plugin
 
 	private HookResult OnRoundEnd(EventRoundEnd @event)
 	{
-		if (!_config.RoundEndSummary)
+		if (!Config.CurrentValue.RoundEndSummary)
 			return HookResult.Continue;
 
 		foreach (var player in Core.PlayerManager.GetAllPlayers())
@@ -102,7 +102,7 @@ public sealed partial class Plugin
 			return;
 
 		// Track if round end summary OR death print is enabled (NoRoundsMode uses death print)
-		if (!_config.RoundEndSummary && !_config.AllowDeathPrint)
+		if (!Config.CurrentValue.RoundEndSummary && !Config.CurrentValue.AllowDeathPrint)
 			return;
 
 		var victimData = GetPlayerData(victim.Slot);
