@@ -32,7 +32,15 @@ public sealed partial class Plugin
 			}
 
 			recentDamage.AddDamage(dmgHealth);
-			attacker.SendCenterHTML(localizer["phrases.center.html", hitgroupName, dmgArmor, recentDamage.TotalDamage], Config.CurrentValue.CenterInfoTimeout * 1000);
+
+			if (Config.CurrentValue.CenterDamageMode == 2)
+			{
+				attacker.SendAlert(localizer["phrases.center.alert", hitgroupName, dmgArmor, recentDamage.TotalDamage]);
+			}
+			else
+			{
+				attacker.SendCenterHTML(localizer["phrases.center.html", hitgroupName, dmgArmor, recentDamage.TotalDamage], Config.CurrentValue.CenterInfoTimeout * 1000);
+			}
 		}
 	}
 

@@ -27,5 +27,9 @@
 
   // Center HTML damage display
   // {0} = hitgroup, {1} = armor damage, {2} = health damage
-  "phrases.center.html": "<font color=\"#FFA500\">Given Damage</font><br><font color=\"#00BFFF\">{1:D3}</font><font color=\"#FFFFFF\"> | </font><font color=\"#FF0000\">{2:D3}</font><br><font color=\"#FFA500\">{0}</font>"
+  "phrases.center.html": "<font color=\"#FFA500\">Given Damage</font><br><font color=\"#00BFFF\">{1:D3}</font><font color=\"#FFFFFF\"> | </font><font color=\"#FF0000\">{2:D3}</font><br><font color=\"#FFA500\">{0}</font>",
+
+  // Center Alert damage display (plain text, max 3 lines, \n for newlines)
+  // {0} = hitgroup, {1} = armor damage, {2} = health damage
+  "phrases.center.alert": "===== DAMAGE =====\nArmor: {1:D3} | HP: {2:D3}\n[ {0} ]"
 }

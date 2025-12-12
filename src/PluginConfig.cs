@@ -23,6 +23,9 @@ public sealed class PluginConfig
 	/// <summary>Show center damage info on hit</summary>
 	public bool CenterDamageInfo { get; set; } = true;
 
+	/// <summary>Center damage display mode: 1 = CenterHTML (formatted), 2 = CenterAlert (plain text, max 3 lines)</summary>
+	public int CenterDamageMode { get; set; } = 1;
+
 	/// <summary>Show console damage info on hit</summary>
 	public bool ConsoleDamageInfo { get; set; } = true;
 
