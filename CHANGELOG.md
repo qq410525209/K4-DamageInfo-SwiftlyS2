@@ -2,6 +2,58 @@
 
 All notable changes to K4-DamageInfo will be documented in this file.
 
+## [1.0.2] - 2026-02-11
+
+### Added
+
+- **Permission-based damage info display** - Control who can see damage information
+  - `Permissions.ConsoleRequirePermission` - Require `k4.damageinfo.console` permission for console damage
+  - `Permissions.CenterRequirePermission` - Require `k4.damageinfo.center` permission for center damage (HTML/Alert)
+  - `Permissions.SummaryRequirePermission` - Require `k4.damageinfo.summary` permission for chat summary
+  - All permissions default to `false` (everyone can see damage info)
+  - Permissions can be set individually for each damage type
+  - Supports wildcards: `k4.damageinfo.*` grants all damage info permissions
+
+### Fixed
+
+- **CRITICAL**: Fixed configuration binding bug in `LoadConfiguration()` method
+  - Changed `.BindConfiguration(ConfigFileName)` to `.BindConfiguration(ConfigSection)`
+  - This bug caused the plugin to always use hardcoded default values instead of reading from `k4-damageinfo.jsonc`
+  - **Impact**: Plugin configuration was completely non-functional - all settings were ignored
+
+### Changed
+
+- Upgraded configuration initialization to use `.AddOptionsWithValidateOnStart<T>()` (per SwiftlyS2 documentation)
+  - Validates configuration on startup to catch errors early
+
+### Usage Example
+
+**Config (`k4-damageinfo.jsonc`):**
+```jsonc
+{
+  "K4DamageInfo": {
+    // ... other settings ...
+    "Permissions": {
+      "ConsoleRequirePermission": true,   // Only players with k4.damageinfo.console
+      "CenterRequirePermission": false,    // Everyone can see center damage
+      "SummaryRequirePermission": false    // Everyone can see death/round summary
+    }
+  }
+}
+```
+
+**Permissions (`admins.json`):**
+```json
+{
+  "76561198012345678": {
+    "permissions": ["k4.damageinfo.*"]     // All damage info permissions
+  },
+  "76561198087654321": {
+    "permissions": ["k4.damageinfo.console", "k4.damageinfo.center"]  // Specific permissions
+  }
+}
+```
+
 ## [1.0.1] - 2025-12-12
 
 ### Added
