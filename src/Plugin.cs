@@ -10,7 +10,7 @@ namespace K4DamageInfo;
 
 [PluginMetadata(
 	Id = "k4.damageinfo",
-	Version = "1.0.1",
+	Version = "1.0.2",
 	Name = "K4 - Damage Info",
 	Author = "K4ryuu",
 	Description = "Shows damage information to players."
@@ -37,7 +37,7 @@ public sealed partial class Plugin(ISwiftlyCore core) : BasePlugin(core)
 		_playerData.Clear();
 	}
 
-	private void LoadConfiguration()
+	private static void LoadConfiguration()
 	{
 		Core.Configuration
 			.InitializeJsonWithModel<PluginConfig>(ConfigFileName, ConfigSection)
@@ -48,8 +48,8 @@ public sealed partial class Plugin(ISwiftlyCore core) : BasePlugin(core)
 
 		ServiceCollection services = new();
 		services.AddSwiftly(Core)
-			.AddOptions<PluginConfig>()
-			.BindConfiguration(ConfigFileName);
+			.AddOptionsWithValidateOnStart<PluginConfig>()
+			.BindConfiguration(ConfigSection);
 
 		var provider = services.BuildServiceProvider();
 		Config = provider.GetRequiredService<IOptionsMonitor<PluginConfig>>();
