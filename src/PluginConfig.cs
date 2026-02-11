@@ -37,4 +37,23 @@ public sealed class PluginConfig
 
 	/// <summary>Timeout for center damage info display (seconds)</summary>
 	public int CenterInfoTimeout { get; set; } = 3;
+
+	/// <summary>Permission settings for damage info display</summary>
+	public DamageInfoPermissions Permissions { get; set; } = new();
+}
+
+/// <summary>
+/// Permission requirements for damage info features
+/// Permission flags: k4.damageinfo.console, k4.damageinfo.center, k4.damageinfo.summary
+/// </summary>
+public sealed class DamageInfoPermissions
+{
+	/// <summary>Require k4.damageinfo.console permission to see console damage info</summary>
+	public bool ConsoleRequirePermission { get; set; } = false;
+
+	/// <summary>Require k4.damageinfo.center permission to see center damage info (HTML/Alert)</summary>
+	public bool CenterRequirePermission { get; set; } = false;
+
+	/// <summary>Require k4.damageinfo.summary permission to see chat damage summary on death/round end</summary>
+	public bool SummaryRequirePermission { get; set; } = false;
 }

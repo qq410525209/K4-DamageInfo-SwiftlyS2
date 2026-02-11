@@ -11,18 +11,18 @@ public sealed partial class Plugin
 		var localizer = Core.Translation.GetPlayerLocalizer(attacker);
 		string hitgroupName = GetHitgroupName(localizer, hitgroup);
 
-		if (Config.CurrentValue.ConsoleDamageInfo)
+		if (Config.CurrentValue.ConsoleDamageInfo && CanSeeConsoleDamage(attacker))
 		{
 			attacker.SendConsole(localizer["phrases.console.normal", victim.Controller?.PlayerName ?? "Unknown", dmgHealth, dmgArmor, hitgroupName]);
 
-			if (!victim.IsFakeClient)
+			if (!victim.IsFakeClient && CanSeeConsoleDamage(victim))
 			{
 				var victimLocalizer = Core.Translation.GetPlayerLocalizer(victim);
 				victim.SendConsole(victimLocalizer["phrases.console.inverse", attacker.Controller?.PlayerName ?? "Unknown", dmgHealth, dmgArmor, GetHitgroupName(victimLocalizer, hitgroup)]);
 			}
 		}
 
-		if (Config.CurrentValue.CenterDamageInfo)
+		if (Config.CurrentValue.CenterDamageInfo && CanSeeCenterDamage(attacker))
 		{
 			var attackerData = GetPlayerData(attacker.Slot);
 			if (!attackerData.RecentDamages.TryGetValue(victim.Slot, out var recentDamage))
@@ -47,6 +47,9 @@ public sealed partial class Plugin
 	private void DisplayDamageInfo(IPlayer player)
 	{
 		if (player.IsFakeClient)
+			return;
+
+		if (!CanSeeDamageSummary(player))
 			return;
 
 		var data = GetPlayerData(player.Slot);

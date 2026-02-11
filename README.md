@@ -55,6 +55,8 @@ To use this server addon, you'll need the following dependencies installed:
 
 ## Configuration
 
+### Basic Settings
+
 | Option              | Description                                             | Default |
 | ------------------- | ------------------------------------------------------- | ------- |
 | `RoundEndSummary`   | Show damage summary at round end                        | `true`  |
@@ -63,10 +65,57 @@ To use this server addon, you'll need the following dependencies installed:
 | `ShowFriendlyFire`  | Show friendly fire damage in summary                    | `false` |
 | `ShowAllDamages`    | Show all damages from all players                       | `false` |
 | `CenterDamageInfo`  | Show center damage info on hit                          | `true`  |
+| `CenterDamageMode`  | Center damage display mode: `1` = HTML, `2` = Alert     | `1`     |
 | `ConsoleDamageInfo` | Show console damage info on hit                         | `true`  |
 | `FFAMode`           | Free-for-all mode (show damage to teammates)            | `false` |
 | `NoRoundsMode`      | No rounds mode - clear damage on death instead of round | `false` |
 | `CenterInfoTimeout` | Timeout for center damage info display (seconds)        | `3`     |
+
+### Permission Settings
+
+| Option                                 | Description                                | Default | Permission Required     |
+| -------------------------------------- | ------------------------------------------ | ------- | ----------------------- |
+| `Permissions.ConsoleRequirePermission` | Require permission for console damage info | `false` | `k4.damageinfo.console` |
+| `Permissions.CenterRequirePermission`  | Require permission for center damage info  | `false` | `k4.damageinfo.center`  |
+| `Permissions.SummaryRequirePermission` | Require permission for chat damage summary | `false` | `k4.damageinfo.summary` |
+
+### Permission Examples
+
+**Config (`k4-damageinfo.jsonc`):**
+
+```jsonc
+{
+  "K4DamageInfo": {
+    "CenterDamageInfo": true,
+    "ConsoleDamageInfo": true,
+    "Permissions": {
+      "ConsoleRequirePermission": true, // Only players with k4.damageinfo.console permission
+      "CenterRequirePermission": false, // Everyone can see center damage
+      "SummaryRequirePermission": false, // Everyone can see death/round summary
+    },
+  },
+}
+```
+
+**Permissions (`admins.json`):**
+
+```json
+{
+  "76561234": {
+    "permissions": ["k4.damageinfo.*"] // All damage info permissions
+  },
+  "76565678": {
+    "permissions": ["k4.damageinfo.console", "k4.damageinfo.center"]
+  }
+}
+```
+
+**Permission Flags:**
+
+- `k4.damageinfo.console` - See console damage information
+- `k4.damageinfo.center` - See center screen damage (HTML/Alert)
+- `k4.damageinfo.summary` - See chat damage summary on death/round end
+- `k4.damageinfo.*` - Wildcard for all damage info permissions
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
